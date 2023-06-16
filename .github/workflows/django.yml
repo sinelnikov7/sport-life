@@ -22,9 +22,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         export $(grep -v '^#' .env | xargs)
+        echo "SECRET_KEY = 'django-insecure-dumny-secret'" > ./.env
         python3 manage.py makemigrations
         python3 manage.py migrate
     - name: Run Tests
       run: |
-        echo "SECRET_KEY = 'django-insecure-dumny-secret'" > ./.env
         pytest
