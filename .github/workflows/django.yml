@@ -24,4 +24,5 @@ jobs:
         export $(grep -v '^#' .env | xargs)
     - name: Run Tests
       run: |
+        echo "SECRET_KEY = 'django-insecure-dumny-secret'" > ./.env
         pytest
