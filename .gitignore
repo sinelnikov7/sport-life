@@ -162,4 +162,4 @@ cython_debug/
 /main/migrations/0001_initial.py
 /media/
 /.github/workflows/django.yml
-.github
+
