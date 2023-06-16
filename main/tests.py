@@ -1,7 +1,7 @@
 import pytest
 # from .serializers import ModuleSerializer
 
-from .models import User
+from .models import User, ConfirmCode
 
 # @pytest.mark.django_db(transaction=True)
 @pytest.mark.django_db
@@ -18,7 +18,6 @@ def test_register(api_client):
     assert response.data['User']['email'] == "register_test@test.ru"
     assert response.data['User']['username'] == "register_test"
 
-
 @pytest.mark.django_db
 def test_login(api_client):
 
@@ -33,6 +32,19 @@ def test_login(api_client):
     }
     assert api_client.post('/token/', data=invalid_login_data).status_code == 401
     assert User.objects.count() == 1
+@pytest.mark.django_db
+def test_approve(api_client):
+    key = 1234
+    a = ConfirmCode(user_id=1, key=key)
+    a.save()
+    valid_login_data = {
+        "email": "admin@admin.ru",
+        "password": "123"
+    }
+    token = api_client.post('/token/', data=valid_login_data).data['access']
+    assert api_client.post('/approve/', data={"key": key}, headers={'Authorization': f'access {token}'}).data == {'success': True}
+    assert api_client.post('/approve/', data={"key": 1}, headers={'Authorization': f'access {token}'}).data == {"success": False, "message": "Неверный пароль"}
+
 
 
 # @pytest.mark.django_db

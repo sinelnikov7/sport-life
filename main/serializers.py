@@ -55,9 +55,10 @@ class ApproveSerializer(serializers.ModelSerializer):
         """Активация пользователя по коду из письма"""
         token = request.headers.get('Authorization').split(' ')[1]
         user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
-        key = request.data['key']
+        key = int(request.data['key'])
         code = ConfirmCode.objects.get(user_id=user_id).key
         if code == key:
+        # if key == 1234:
             user = User.objects.get(id=user_id)
             user.is_approve = True
             user.save()
