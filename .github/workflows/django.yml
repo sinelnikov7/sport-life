@@ -21,11 +21,10 @@ jobs:
     - name: Install Dependencies
       run: |
         echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
-        ls
-        ls
+        echo EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} >> .env
+        echo EMAIL_SENDER=${{ secrets.EMAIL_SENDER }} >> .env
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
         python3 manage.py makemigrations
         python3 manage.py migrate
     - name: Run Tests
