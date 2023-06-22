@@ -3,6 +3,7 @@ import pytest
 
 from .models import User, ConfirmCode
 
+
 # @pytest.mark.django_db(transaction=True)
 @pytest.mark.django_db
 # @pytest.mark.transactional_db
