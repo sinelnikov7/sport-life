@@ -38,6 +38,13 @@ class ConfirmCode(models.Model):
     key = models.IntegerField(verbose_name='Проверочный код')
     user = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='Пользователь')
 
+    class Meta:
+        verbose_name = "Код активации пользователя"
+        verbose_name_plural = "Коды активации пользователей"
+
+    def __str__(self):
+        return f'Пароль для активации пользователя id = {self.user_id}'
+
 
 class ImageExercise(models.Model):
     """Озображения упражнений"""
