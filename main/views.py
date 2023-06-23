@@ -66,12 +66,15 @@ class UserApiView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
+
         user_id = kwargs['pk']
         queryset = User.objects.get(id=user_id)
-        age = queryset.get_age
-        setattr(queryset, 'age', age)
+        if queryset.date_of_birth != None:
+            age = queryset.get_age
+            setattr(queryset, 'age', age)
         serializer = self.serializer_class(queryset)
         return Response({"status": 200, "user": serializer.data})
+
 
 
 class UserUpdateView(generics.UpdateAPIView):

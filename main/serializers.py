@@ -4,9 +4,15 @@ import jwt
 from django.db import transaction
 from rest_framework import serializers
 
+
 from sport_life.settings import SECRET_KEY
 from .tasks import send_confirm_email
 from .models import User, ConfirmCode
+
+from django.contrib.auth import authenticate, get_user_model
+from rest_framework import exceptions
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, PasswordField
+from rest_framework_simplejwt.settings import api_settings
 
 def email_unique_validitor(data: str):
     """Валидация email на уникальность при регистрации"""
@@ -33,8 +39,8 @@ class UserRegistrationSerializer(serializers.Serializer):
         """Регистрация нового пользователя, создание проверочного кода
             и отправка кода на почту новому пользователю"""
         with transaction.atomic():
-            user = User(email=validated_data['email'], username=validated_data['username'])
-            user.set_password(validated_data['password'])
+            user = User(email=validated_data['email'].lower(), username=validated_data['username'].lower())
+            user.set_password(validated_data['password'].lower())
             user.save()
             user_id = user.id
             number = random.randint(1000, 9999)
@@ -98,6 +104,44 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
             return {"success": True, "user": instance}
         else:
             return {"success": False}
+
+
+# class TokenSerializer(serializers.Serializer):
+#     """Сириализатор для получения токена"""
+#     username_field = get_user_model().USERNAME_FIELD
+#     token_class = None
+#
+#     default_error_messages = {
+#         "no_active_account": ("No active account found with the given credentials")
+#     }
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#
+#         self.fields[self.username_field] = serializers.CharField()
+#         self.fields["password"] = PasswordField()
+#     def validate(self, attrs):
+#         authenticate_kwargs = {
+#             self.username_field: attrs[self.username_field].lower(),
+#             "password": attrs["password"],
+#         }
+#         try:
+#             authenticate_kwargs["request"] = self.context["request"]
+#         except KeyError:
+#             pass
+#
+#         self.user = authenticate(**authenticate_kwargs)
+#
+#         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
+#             raise exceptions.AuthenticationFailed(
+#                 self.error_messages["no_active_account"],
+#                 "no_active_account",
+#             )
+#         return {}
+#
+#     @classmethod
+#     def get_token(cls, user):
+#         return cls.token_class.for_user(user)
 
 
 
