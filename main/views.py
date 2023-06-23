@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
@@ -33,15 +34,21 @@ def update(request):
     else:
         return HttpResponse("Couldn't update the code on PythonAnywhere")
 
-@api_view(['POST'])
-def register(request):
-    serializer = UserRegistrationSerializer(data=request.data)
 
-    if serializer.is_valid():
-        response = serializer.create(validated_data=serializer.validated_data)
-        return Response({"User": UserRegistrationSerializer(response).data}, status=status.HTTP_201_CREATED)
-    else:
-        return Response({"errors": serializer.errors})
+
+
+class UserRegister(APIView):
+
+    @swagger_auto_schema(request_body=UserRegistrationSerializer)
+    def post(self, request):
+        """Регистрация нового пользователя"""
+        serializer = UserRegistrationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            response = serializer.create(validated_data=serializer.validated_data)
+            return Response({"User": UserRegistrationSerializer(response).data}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"errors": serializer.errors})
 
 
 class UserApprove(APIView):
@@ -50,6 +57,7 @@ class UserApprove(APIView):
     serializer_class = ApproveSerializer
     permission_classes = (IsAuthenticated, )
 
+    @swagger_auto_schema(request_body=ApproveSerializer)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -70,7 +78,6 @@ class UserApiView(generics.RetrieveAPIView):
         user_id = kwargs['pk']
         try:
             queryset = User.objects.get(id=user_id)
-            # queryset = get_object_or_404(User, pk=user_id)
             if queryset.date_of_birth != None:
                 age = queryset.get_age
                 setattr(queryset, 'age', age)
