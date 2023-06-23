@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
@@ -68,12 +68,16 @@ class UserApiView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
 
         user_id = kwargs['pk']
-        queryset = User.objects.get(id=user_id)
-        if queryset.date_of_birth != None:
-            age = queryset.get_age
-            setattr(queryset, 'age', age)
-        serializer = self.serializer_class(queryset)
-        return Response({"status": 200, "user": serializer.data})
+        try:
+            queryset = User.objects.get(id=user_id)
+            # queryset = get_object_or_404(User, pk=user_id)
+            if queryset.date_of_birth != None:
+                age = queryset.get_age
+                setattr(queryset, 'age', age)
+            serializer = self.serializer_class(queryset)
+            return Response({"status": 200, "user": serializer.data})
+        except User.DoesNotExist:
+            return Response({"message": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
 
 
 
