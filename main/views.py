@@ -1,7 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
@@ -25,7 +24,7 @@ def update(request):
         stored on PythonAnywhere in the git.Repo() as parameter.
         Here the name of my directory is "test.pythonanywhere.com"
         '''
-        repo = git.Repo("test.pythonanywhere.com/")
+        repo = git.Repo("https://github.com/sinelnikov7/sport-life.git")
         origin = repo.remotes.origin
 
         origin.pull()
@@ -35,9 +34,9 @@ def update(request):
         return HttpResponse("Couldn't update the code on PythonAnywhere")
 
 
-
-
 class UserRegister(APIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegistrationSerializer
 
     @swagger_auto_schema(request_body=UserRegistrationSerializer)
     def post(self, request):
