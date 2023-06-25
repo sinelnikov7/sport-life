@@ -24,7 +24,7 @@ def update(request):
         stored on PythonAnywhere in the git.Repo() as parameter.
         Here the name of my directory is "test.pythonanywhere.com"
         '''
-        repo = git.Repo("git://github.com/sinelnikov7/sport-life.git")
+        repo = git.Repo("/home/project/sport-life")
         # repo = git.Repo("./sport-life")
         origin = repo.remotes.origin
 
