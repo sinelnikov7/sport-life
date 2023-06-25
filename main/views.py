@@ -12,7 +12,11 @@ from .serializers import UserRegistrationSerializer, ApproveSerializer, UserRetr
 import git
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+import dotenv
+import os
 
+dotenv.load_dotenv()
+REPO = os.environ.get('REPO')
 
 def main(request):
     return render(request, 'main.html')
@@ -24,7 +28,7 @@ def update(request):
         stored on PythonAnywhere in the git.Repo() as parameter.
         Here the name of my directory is "test.pythonanywhere.com"
         '''
-        repo = git.Repo("/home/project/sport-life")
+        repo = git.Repo(REPO)
         # repo = git.Repo("./sport-life")
         origin = repo.remotes.origin
 
