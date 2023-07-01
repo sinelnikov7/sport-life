@@ -1,3 +1,4 @@
+import jwt
 from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -6,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 
+from sport_life.settings import SECRET_KEY
 from .models import ConfirmCode, User
 from .serializers import UserRegistrationSerializer, ApproveSerializer, UserRetrieveSerializer
 
@@ -78,8 +80,8 @@ class UserApiView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
-
-        user_id = kwargs['pk']
+        token = request.headers.get('Authorization').split(' ')[1]
+        user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
         try:
             queryset = User.objects.get(id=user_id)
             if queryset.date_of_birth != None:
@@ -99,9 +101,12 @@ class UserUpdateView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
+        token = request.headers.get('Authorization').split(' ')[1]
+        user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
+
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            response = serializer.update(User.objects.get(id=kwargs["pk"]), serializer.validated_data, request)
+            response = serializer.update(User.objects.get(id=user_id), serializer.validated_data, request)
         else:
             return Response({"errors": serializer.errors})
         if response["success"]:

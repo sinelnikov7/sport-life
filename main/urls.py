@@ -9,8 +9,8 @@ router = DefaultRouter()
 urlpatterns = [
     path('register/', UserRegister.as_view()),
     path('approve/', UserApprove.as_view()),
-    path('user_detail/<int:pk>', UserApiView.as_view()),
-    path('user_update/<int:pk>', UserUpdateView.as_view()),
+    path('profile/', UserApiView.as_view()),
+    path('profile/update/', UserUpdateView.as_view()),
     path('dellete/<int:pk>', UserDelleteView.as_view()),
     path('git_update', update),
     path('main', main),
