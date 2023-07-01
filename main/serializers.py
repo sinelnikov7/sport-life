@@ -77,6 +77,7 @@ class ApproveSerializer(serializers.ModelSerializer):
 class UserRetrieveSerializer(serializers.ModelSerializer):
     """Сериализатор обновления пользователя"""
     email = serializers.EmailField(read_only=True)
+    is_approve = serializers.BooleanField(read_only=True)
     username = serializers.CharField(read_only=True)
     first_name = serializers.CharField(max_length=150)
     last_name = serializers.CharField(max_length=150)
@@ -89,7 +90,7 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'is_coach',
+        fields = ('id', 'is_approve', 'username', 'email', 'first_name', 'last_name', 'is_coach',
                   'date_of_birth', 'height', 'weight', 'avatar', 'age')
 
     def update(self, instance, validated_data, request):
