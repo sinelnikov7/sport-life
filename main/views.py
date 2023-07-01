@@ -109,3 +109,17 @@ class UserUpdateView(generics.UpdateAPIView):
             return Response(UserRetrieveSerializer(user).data)
         else:
             return Response({"success": False, "message": "Неверный token пользователя"})
+
+
+class UserDelleteView(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRetrieveSerializer
+    # permission_classes = (IsAuthenticated,)
+    def destroy(self, request, *args, **kwargs):
+
+        user_id = kwargs['pk']
+        try:
+            User.objects.get(id=user_id).delete()
+            return Response({"status": 200, "user": "Удален"})
+        except User.DoesNotExist:
+            return Response({"message": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
