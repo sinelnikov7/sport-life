@@ -17,7 +17,7 @@ urlpatterns = [
     path('profile/', UserApiView.as_view()),
     path('profile/update/', UserUpdateView.as_view()),
     path('dellete/<int:pk>', UserDelleteView.as_view()),
-    path('git_update', update),
+    # path('git_update', update),
     path('main', main),
     path('', include(router.urls)),
 ]
