@@ -1,14 +1,38 @@
 version: '3'
 services:
-  rabbitmq:
-    image: rabbitmq:3.8-management
-    ports:
-      - 5672:5672  # порт для доступа к RabbitMQ
-      - 15672:15672  # порт для доступа к RabbitMQ Management UI
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq  # сохранение данных RabbitMQ
+  db:
+    container_name: pg_container
+    image: postgres:14-alpine
+    restart: always
     environment:
-      - RABBITMQ_DEFAULT_USER=admin  # имя пользователя для RabbitMQ
-      - RABBITMQ_DEFAULT_PASS=admin123  # пароль для RabbitMQ
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=sportlife
+    volumes:
+      - sport:/postgres_data/var/lib/postgresql/data
+    ports:
+      - "7777:5432"
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=vouka7@mail.ru
+      - PGADMIN_DEFAULT_PASSWORD=vouka2012
+    ports:
+      - "5050:80"
+#  rabbitmq:
+#    image: rabbitmq:3.8-management
+#    ports:
+#      - 5672:5672  # порт для доступа к RabbitMQ
+#      - 15672:15672  # порт для доступа к RabbitMQ Management UI
+#    volumes:
+#      - rabbitmq_data:/var/lib/rabbitmq  # сохранение данных RabbitMQ
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=admin  # имя пользователя для RabbitMQ
+#      - RABBITMQ_DEFAULT_PASS=admin123  # пароль для RabbitMQ
 volumes:
-  rabbitmq_data:
+  #rabbitmq_data:
+  sport:
