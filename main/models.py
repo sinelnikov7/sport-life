@@ -10,8 +10,8 @@ class User(AbstractUser):
     is_approve = models.BooleanField(default=False, verbose_name='Пользователь подтвердил код из письма')
     is_coach = models.BooleanField(verbose_name="Являеться ли пользователь тренером",default=False)
     date_of_birth = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
-    height = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Рост в см', null=True, blank=True)
-    weight = models.DecimalField(max_digits=3, decimal_places=1, verbose_name='Вес в кг', null=True, blank=True)
+    height = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Рост в см', null=True, blank=True)
+    weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Вес в кг', null=True, blank=True)
     avatar = models.ImageField(upload_to='user_avatar', verbose_name='Аватар пользователя')
 
     REQUIRED_FIELDS = ['username']

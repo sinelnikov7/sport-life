@@ -83,8 +83,8 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(max_length=150)
     is_coach = serializers.BooleanField(default=False)
     date_of_birth = serializers.DateField(required=True)
-    height = serializers.DecimalField(max_digits=3, decimal_places=1)
-    weight = serializers.DecimalField(max_digits=3, decimal_places=1)
+    height = serializers.DecimalField(max_digits=4, decimal_places=1)
+    weight = serializers.DecimalField(max_digits=4, decimal_places=1)
     avatar = serializers.ImageField(required=False)
     age = serializers.IntegerField(read_only=True)
 
