@@ -17,6 +17,8 @@ from django.views.decorators.csrf import csrf_exempt
 import dotenv
 import os
 
+from .services import get_user_id
+
 dotenv.load_dotenv()
 REPO = os.environ.get('REPO')
 
@@ -66,11 +68,13 @@ class UserApprove(APIView):
     @swagger_auto_schema(request_body=ApproveSerializer)
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
+        user_id = get_user_id(request)
         if serializer.is_valid():
-            response = serializer.approve(request)
+            response = serializer.approve(request, user_id)
         else:
             return Response({"errors": serializer.errors}, status=status.HTTP_401_UNAUTHORIZED)
         return Response(response, status=status.HTTP_200_OK)
+
 
 
 class UserApiView(generics.RetrieveAPIView):
@@ -80,8 +84,7 @@ class UserApiView(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, *args, **kwargs):
-        token = request.headers.get('Authorization').split(' ')[1]
-        user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
+        user_id = get_user_id(request)
         try:
             queryset = User.objects.get(id=user_id)
             if queryset.date_of_birth != None:
@@ -101,12 +104,10 @@ class UserUpdateView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def update(self, request, *args, **kwargs):
-        token = request.headers.get('Authorization').split(' ')[1]
-        user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
-
+        user_id = get_user_id(request)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            response = serializer.update(User.objects.get(id=user_id), serializer.validated_data, request)
+            response = serializer.update(User.objects.get(id=user_id), serializer.validated_data, user_id)
         else:
             return Response({"errors": serializer.errors})
         if response["success"]:

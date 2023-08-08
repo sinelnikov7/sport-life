@@ -57,10 +57,8 @@ class ApproveSerializer(serializers.ModelSerializer):
         model = ConfirmCode
         fields = ('key', )
 
-    def approve(self, request):
+    def approve(self, request, user_id):
         """Активация пользователя по коду из письма"""
-        token = request.headers.get('Authorization').split(' ')[1]
-        user_id = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
         key = int(request.data['key'])
         code = ConfirmCode.objects.get(user_id=user_id).key
         if code == key:
@@ -93,12 +91,9 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
         fields = ('id', 'is_approve', 'username', 'email', 'first_name', 'last_name', 'is_coach',
                   'date_of_birth', 'height', 'weight', 'avatar', 'age')
 
-    def update(self, instance, validated_data, request):
+    def update(self, instance, validated_data, user_id):
         """Обновление пользователя"""
-        user_id = instance.id
-        token = request.headers.get('Authorization').split(' ')[1]
-        user_id_from_token = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])['user_id']
-        if user_id == user_id_from_token:
+        if user_id == instance.id:
             super().update(instance, validated_data)
             age = instance.get_age
             setattr(instance, 'age', age)

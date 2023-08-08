@@ -163,3 +163,7 @@ cython_debug/
 /media/
 
 
+/main/migrations/0002_alter_user_height_alter_user_weight.py
+/notes/migrations/0001_initial.py
+/notes/migrations/0002_alter_note_time_create.py
+/notes/migrations/0003_alter_note_time_create.py
