@@ -106,6 +106,7 @@ class UserUpdateView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         user_id = get_user_id(request)
         serializer = self.serializer_class(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             response = serializer.update(User.objects.get(id=user_id), serializer.validated_data, user_id)
         else:

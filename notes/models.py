@@ -16,7 +16,7 @@ class Note(models.Model):
 
     def __str__(self):
         preview = self.text
-        if len(preview) > 20:
-            preview = preview[0:20:1]
+        if len(preview) > 30:
+            preview = preview[0:30:1] + '...'
         return f"{preview}"
 # Create your models here.

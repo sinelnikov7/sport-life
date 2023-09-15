@@ -1,11 +1,12 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import DefaultRouter, SimpleRouter
 from main.views import UserRegister, UserApprove, UserApiView, UserUpdateView, update, main, UserDelleteView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from notes.views import NoteCreateUpdateGetDestroyViewSet
 
 
 router = DefaultRouter()
+# router = SimpleRouter()
 # router.register("register/", UserRegister, basename='register')
 router.register('note', NoteCreateUpdateGetDestroyViewSet, basename='note')
 

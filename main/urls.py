@@ -1,5 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+from router.router import router
 from .views import UserRegister, UserApprove, UserApiView, UserUpdateView, update, main, UserDelleteView
 #
 # router = DefaultRouter()
@@ -7,12 +9,5 @@ from .views import UserRegister, UserApprove, UserApiView, UserUpdateView, updat
 #
 #
 urlpatterns = [
-#     path('register/', UserRegister.as_view()),
-#     path('approve/', UserApprove.as_view()),
-#     path('profile/', UserApiView.as_view()),
-#     path('profile/update/', UserUpdateView.as_view()),
-#     path('dellete/<int:pk>', UserDelleteView.as_view()),
     path('git_update', update),
-#     path('main', main),
-#     path('api/', include(router.urls)),
 ]

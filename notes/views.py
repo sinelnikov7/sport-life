@@ -27,6 +27,7 @@ class NoteCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
     filterset_class = NoteFilter
 
     def create(self, request, *args, **kwargs):
+        """Создание заметки"""
         serializer = NoteSerializer(data=request.data)
         user_id = get_user_id(request)
         if serializer.is_valid():
@@ -36,13 +37,18 @@ class NoteCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
         else:
             return Response({"errors": serializer.errors})
 
-    def get(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
+        """Получение списка заметок"""
         user_id = get_user_id(request)
-        notes = Note.objects.filter(user_id=user_id)
-        response = NoteSerializer(notes, many=True)
-        return Response(response.data, status=status.HTTP_200_OK)
+        # queryset  = Note.objects.filter(user_id=user_id)
+        queryset = self.filter_queryset(Note.objects.filter(user_id=user_id))
+        page = self.paginate_queryset(queryset)
+        response = NoteSerializer(page, many=True)
+        # return Response(response.data, status=status.HTTP_200_OK)
+        return self.get_paginated_response(response.data)
 
     def partial_update(self, request, *args, **kwargs):
+        """Обновление заметки"""
         note_id = kwargs.get('pk')
         user_id = get_user_id(request)
         serializer = NoteSerializer(data=request.data)
@@ -60,6 +66,7 @@ class NoteCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
             return Response({'error': f'Записи с id = {note_id} не найдено'})
 
     def destroy(self, request, *args, **kwargs):
+        """Удаление заметки"""
         note_id = kwargs.get('pk')
         user_id = get_user_id(request)
         try:
