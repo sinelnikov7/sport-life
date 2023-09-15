@@ -1,7 +1,7 @@
 import pytest
 import requests
 from pytest_mock import mocker
-from requests_toolbelt.multipart.encoder import MultipartEncoder
+
 
 # from .serializers import ModuleSerializer
 
