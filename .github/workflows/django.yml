@@ -25,7 +25,7 @@ jobs:
         echo EMAIL_SENDER=${{ secrets.EMAIL_SENDER }} >> .env
     - name: Docker Compose Up
       run: |
-        docker-compose up
+        docker-compose up --detach
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
