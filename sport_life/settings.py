@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django_filters',
 
     'main',
-    'notes'
+    'notes',
+    'todo',
 
 ]
 
