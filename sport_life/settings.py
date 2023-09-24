@@ -108,7 +108,7 @@ DATABASES = {
                         'NAME': 'sportlife',
                         'USER': 'root',
                         'PASSWORD': '123',
-                        'HOST': '127.0.0.1',
+                        'HOST': '45.90.219.66',
                         'PORT': '7777'
 }
 }
