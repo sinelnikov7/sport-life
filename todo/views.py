@@ -20,8 +20,8 @@ class TaskCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
     permission_classes = (IsAuthenticated,)
     pagination_class = TaskPagination
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]  # IsOwnerFilterBackend ]
-    filterset_fields = ['text']
-    ordering_fields = ['data']
+    # filterset_fields = ['text']
+    ordering_fields = ['date', 'time']
     filterset_class = TaskFilter
 
     def create(self, request, *args, **kwargs):
@@ -34,6 +34,7 @@ class TaskCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
             return Response({"errors": serializer.errors})
 
     def list(self, request, *args, **kwargs):
+        # user_id = 3
         user_id = get_user_id(request)
         tasks = self.filter_queryset(Task.objects.filter(user_id=user_id))
         page = self.paginate_queryset(tasks)
