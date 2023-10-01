@@ -18,12 +18,27 @@ class PrioritySerializer(serializers.ModelSerializer):
         fields = ['id', 'title']
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    """Сериализатор создания, обновления и получения приоритетов"""
-    id = serializers.IntegerField(read_only=True)
-    status = StatusSerializer(many=False)
-    priority = Priority(many=False)
-
+class TaskCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор создания, обновления задач"""
+    status_id = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all())
+    priority_id = serializers.PrimaryKeyRelatedField(queryset=Priority.objects.all())
+    time = serializers.TimeField()
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ['id', 'user_id', 'date', 'time', 'title', 'status_id', 'priority_id']
+
+    def create(self, validated_data, user_id):
+        task = Task(user_id=user_id, date=validated_data['date'], time=validated_data['time'],
+                    title=validated_data['title'], status=validated_data['status_id'],
+                    priority=validated_data['priority_id'])
+        task.save()
+        return task
+
+class TaskGetSerializer(serializers.ModelSerializer):
+    """Сериализатор  получения задач"""
+    status = StatusSerializer()
+    priority = PrioritySerializer()
+    class Meta:
+        model = Task
+        # fields = '__all__'
+        exclude = ('user', )
