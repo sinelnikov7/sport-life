@@ -42,3 +42,17 @@ class TaskGetSerializer(serializers.ModelSerializer):
         model = Task
         # fields = '__all__'
         exclude = ('user', )
+
+
+class TaskUpdateSerializer(serializers.ModelSerializer):
+    """Сериализатор  обновления задач"""
+    time = serializers.TimeField(required=False)
+    date = serializers.DateField(required=False)
+    title = serializers.CharField(required=False)
+    status_id = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all(), required=False)
+    priority_id = serializers.PrimaryKeyRelatedField(queryset=Priority.objects.all(), required=False)
+
+    class Meta:
+        model = Task
+        exclude = ('user', 'status', 'priority')
+

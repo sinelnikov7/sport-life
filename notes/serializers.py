@@ -7,7 +7,6 @@ class NoteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     time_create = serializers.DateTimeField(read_only=True)
 
-
     class Meta:
         model = Note
         fields = ['id', 'user_id', 'text', 'time_create']
