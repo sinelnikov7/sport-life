@@ -42,6 +42,7 @@ class TaskGetSerializer(serializers.ModelSerializer):
         model = Task
         # fields = '__all__'
         exclude = ('user', )
+        # depth = 2
 
 
 class TaskUpdateSerializer(serializers.ModelSerializer):
@@ -55,4 +56,5 @@ class TaskUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         exclude = ('user', 'status', 'priority')
+        # depth = 2
 

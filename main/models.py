@@ -46,6 +46,27 @@ class ConfirmCode(models.Model):
         return f'Пароль для активации пользователя id = {self.user_id}'
 
 
+class Setting(models.Model):
+    """Модель настроек пользователя"""
+    choice_watch = (
+        (0, "Могут видеть все"),
+        (1, "Могут видеть только друзья"),
+        (2, "Никто не может видеть"),
+    )
+    country = models.CharField(max_length=50, blank=True, null=True, verbose_name="Страна")
+    city = models.CharField(max_length=50, blank=True, null=True, verbose_name="Город")
+    who_can_watch = models.IntegerField(null=True, blank=True, choices=choice_watch,
+                                     verbose_name="Кто может смотреть страницу")
+    user = models.OneToOneField('User', on_delete=models.SET_NULL, verbose_name="Пользователь", null=True, blank=True)
+
+    def __str__(self):
+        user = User.objects.get(setting__id=self.id)
+        # print(dir(user))
+        print(user.setting.user_id, "!!!!!!!!!!!!!!!")
+
+        return f"{user.first_name} {user.last_name}"
+
+
 
 
 
