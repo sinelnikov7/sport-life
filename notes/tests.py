@@ -31,7 +31,7 @@ def test_note_update(api_client, token):
 
 @pytest.mark.django_db
 def test_note_delete(api_client, token):
-    """Обновление заметки"""
+    """Удаление заметки"""
     response = api_client.delete('/api/note/1/', headers={'Authorization': f'access {token}'})
     assert response.status_code == 200
     assert response.json() == {"success": True}

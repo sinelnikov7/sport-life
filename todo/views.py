@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
 from rest_framework import mixins, viewsets, status, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -57,7 +56,6 @@ class TaskCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
                     serializer.update(instanse, serializer.validated_data)
                     task = Task.objects.get(id=task_id)
                     return Response(TaskGetSerializer(task).data, status=status.HTTP_201_CREATED)
-                    # return Response(TaskUpdateSerializer(task).data, status=status.HTTP_201_CREATED)
                 else:
                     return Response({"errors": serializer.errors})
             else:

@@ -5,7 +5,7 @@ from pytest_mock import mocker
 
 # from .serializers import ModuleSerializer
 
-from .models import User, ConfirmCode
+from .models import User, ConfirmCode, Setting
 
 
 # def send_email():
@@ -50,6 +50,19 @@ def test_register_not_unique(api_client):
             "username": ["Пользователь с таким username уже зарегестрирован"]
         }
     }
+
+
+def test_create_setting(api_client, mocker):
+    """Создание объекта настроек для пользователя после его регистрации"""
+
+    mocker.patch('main.tasks.send_confirm_email', return_value=None)
+    register_data = {
+        "email": "for_setting@gmail.com",
+        "username": "register_test",
+        "password": "123"
+    }
+    api_client.post('/api/auth/register/', data=register_data)
+    assert Setting.objects.filter(user__email="for_setting@gmail.com").exists() == True
 
 
 @pytest.mark.django_db

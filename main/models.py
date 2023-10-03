@@ -1,6 +1,10 @@
+import datetime
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import datetime
 
 
 class User(AbstractUser):
@@ -24,6 +28,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.id}"
+
+
 
 
     @property
@@ -61,10 +67,14 @@ class Setting(models.Model):
 
     def __str__(self):
         user = User.objects.get(setting__id=self.id)
-        # print(dir(user))
-        print(user.setting.user_id, "!!!!!!!!!!!!!!!")
+        return f"{user.first_name} {user.last_name} id={self.id}"
 
-        return f"{user.first_name} {user.last_name}"
+@receiver(post_save, sender=User)
+def create_setting(sender, instance, **kwargs):
+    try:
+        instance.setting
+    except ObjectDoesNotExist:
+        Setting.objects.create(who_can_watch=0, user_id=instance.id)
 
 
 
