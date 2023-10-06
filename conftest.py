@@ -32,6 +32,8 @@ def django_db_setup(django_db_setup, django_db_blocker):
         with transaction.atomic():
             note = Note(text='Hello world', user_id=1)
             note.save()
+            note = Note(text='Second', user_id=1)
+            note.save()
             pass
         yield
 
