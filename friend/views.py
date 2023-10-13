@@ -59,5 +59,4 @@ def confirm_to_friendlist(request, pk):
             queryset_recepient.friend_list.add(sender)
             queryset_sender.friend_list.add(recipient)
         response = GetFriendSerializer(queryset_recepient).data
-        print('1111')
         return Response({'data': response})
