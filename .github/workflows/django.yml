@@ -31,7 +31,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         python3 manage.py makemigrations
-        python3 manage.py migrate
+        python3 manage.py migrate main
+        python3 manage.py migrate notes
+        python3 manage.py migrate todo
+        python3 manage.py migrate friend
+        
+
     - name: Run Tests
       run: |
         pytest
