@@ -28,7 +28,7 @@ def add_to_friendlist(request, pk):
             return Response({"error": {'message': f"Вы уже отправили приглашение пользователю с id={pk}"}})
         elif pk in queryset.got_invites.values_list('id', flat=True):
             return Response({"error": {'message': f"Пользователь с id={pk} уже отправил вам приглашение"}})
-        elif pk in queryset.friends.values_list('id', flat=True):
+        elif pk in queryset.friend_list.values_list('id', flat=True):
             return Response({"error": {'message': f"Пользователь с id={pk} уже в списке ваших друзей"}})
         elif pk == user_id:
             return Response({"error": {'message': f"Нельзя добавить в список друзей самого себя"}})
@@ -56,7 +56,7 @@ def confirm_to_friendlist(request, pk):
         with transaction.atomic():
             queryset_recepient.got_invites.remove(sender)
             queryset_sender.sended_invites.remove(recipient)
-            queryset_recepient.friends.add(sender)
-            queryset_sender.friends.add(recipient)
+            queryset_recepient.friend_list.add(sender)
+            queryset_sender.friend_list.add(recipient)
         response = GetFriendSerializer(queryset_recepient).data
         return Response({'data': response})

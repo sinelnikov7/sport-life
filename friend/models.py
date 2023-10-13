@@ -8,7 +8,7 @@ from main.models import User
 class Friend(models.Model):
     sended_invites = models.ManyToManyField(User, related_name='send_invite', verbose_name="Список отправленных приглашений",  blank=True)
     got_invites = models.ManyToManyField(User, related_name='get_invite', verbose_name="Список полученных приглашений",  blank=True)
-    friends = models.ManyToManyField(User, related_name='friends', verbose_name="Список друзей",  blank=True)
+    friend_list = models.ManyToManyField(User, related_name='friend_list', verbose_name="Список друзей",  blank=True)
     user = models.OneToOneField(User, on_delete=models.SET_NULL, verbose_name="Пользователь",  null=True, blank=True)
 
     def __str__(self):

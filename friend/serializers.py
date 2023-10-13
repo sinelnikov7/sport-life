@@ -8,7 +8,7 @@ class GetFriendSerializer(serializers.ModelSerializer):
     """Сериализатор для получения списка друзей"""
     sended_invites = UserRetrieveSerializer(many=True)
     got_invites = UserRetrieveSerializer(many=True)
-    friends = UserRetrieveSerializer(many=True)
+    friend_list = UserRetrieveSerializer(many=True)
 
     class Meta:
         model = Friend

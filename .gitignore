@@ -172,3 +172,5 @@ cython_debug/
 /main/migrations/0003_setting.py
 /main/migrations/0004_alter_setting_who_can_watch.py
 /friend/migrations/0001_initial.py
+/friend/migrations/0002_remove_friend_friends_friend_friend_list_and_more.py
+/main/migrations/0005_alter_user_avatar.py
