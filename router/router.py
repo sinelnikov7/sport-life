@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter, SimpleRouter
-from main.views import UserRegister, UserApprove, UserApiView, UserUpdateView, update, main, UserDelleteView
+from main.views import UserRegister, UserApprove, UserApiView, UserUpdateView, update, main, UserDelleteView, user_setting_update
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from notes.views import NoteCreateUpdateGetDestroyViewSet
 from todo.views import TaskCreateUpdateGetDestroyViewSet
@@ -21,6 +21,7 @@ urlpatterns = [
     path('auth/approve/', UserApprove.as_view()),
     path('profile/', UserApiView.as_view()),
     path('profile/update/', UserUpdateView.as_view()),
+    path('profile/setting-update/', user_setting_update),
     path('dellete/<int:pk>', UserDelleteView.as_view()),
     # path('git_update', update),
     path('main', main),

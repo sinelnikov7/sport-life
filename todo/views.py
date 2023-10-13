@@ -55,7 +55,7 @@ class TaskCreateUpdateGetDestroyViewSet(mixins.CreateModelMixin,
                 if serializer.is_valid():
                     serializer.update(instanse, serializer.validated_data)
                     task = Task.objects.get(id=task_id)
-                    return Response(TaskGetSerializer(task).data, status=status.HTTP_201_CREATED)
+                    return Response(TaskGetSerializer(task).data, status=status.HTTP_200_OK)
                 else:
                     return Response({"errors": serializer.errors})
             else:

@@ -7,7 +7,7 @@ from rest_framework import serializers
 
 from sport_life.settings import SECRET_KEY
 from .tasks import send_confirm_email
-from .models import User, ConfirmCode
+from .models import User, ConfirmCode, Setting
 
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import exceptions
@@ -27,6 +27,18 @@ def username_unique_validitor(data: str):
         raise serializers.ValidationError("Пользователь с таким username уже зарегестрирован")
     else:
         return data.lower()
+
+
+class SettingGetSerializer(serializers.ModelSerializer):
+    """Сериализатор настроек пользователя"""
+    country = serializers.CharField(max_length=50, required=False)
+    city = serializers.CharField(max_length=50, required=False)
+    who_can_watch = serializers.IntegerField(required=False)
+    class Meta:
+        model = Setting
+        exclude = ('id', 'user')
+
+
 
 class UserRegistrationSerializer(serializers.Serializer):
     """Сериализатор регистрации пользователя"""
@@ -85,11 +97,12 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
     weight = serializers.DecimalField(max_digits=4, decimal_places=1)
     avatar = serializers.ImageField(required=False)
     age = serializers.IntegerField(read_only=True)
+    setting = SettingGetSerializer(read_only=True)
 
     class Meta:
         model = User
         fields = ('id', 'is_approve', 'username', 'email', 'first_name', 'last_name', 'is_coach',
-                  'date_of_birth', 'height', 'weight', 'avatar', 'age')
+                  'date_of_birth', 'height', 'weight', 'avatar', 'age', 'setting')
 
     def update(self, instance, validated_data, user_id):
         """Обновление пользователя"""
@@ -116,6 +129,7 @@ class UserRetrieveSerializer(serializers.ModelSerializer):
 #
 #         self.fields[self.username_field] = serializers.CharField()
 #         self.fields["password"] = PasswordField()
+
 #     def validate(self, attrs):
 #         authenticate_kwargs = {
 #             self.username_field: attrs[self.username_field].lower(),

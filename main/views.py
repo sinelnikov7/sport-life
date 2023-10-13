@@ -2,14 +2,15 @@ import jwt
 from django.shortcuts import render
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 
 from sport_life.settings import SECRET_KEY
-from .models import ConfirmCode, User
-from .serializers import UserRegistrationSerializer, ApproveSerializer, UserRetrieveSerializer
+from .models import ConfirmCode, User, Setting
+from .serializers import UserRegistrationSerializer, ApproveSerializer, UserRetrieveSerializer, SettingGetSerializer
 
 import git
 from django.http import HttpResponse
@@ -91,10 +92,10 @@ class UserApiView(generics.RetrieveAPIView):
                 age = queryset.get_age
                 setattr(queryset, 'age', age)
             serializer = self.serializer_class(queryset)
+            print(queryset.setting.city, queryset.setting.country, queryset.setting.who_can_watch)
             return Response({"status": 200, "user": serializer.data})
         except User.DoesNotExist:
             return Response({"message": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
-
 
 
 class UserUpdateView(generics.UpdateAPIView):
@@ -130,3 +131,18 @@ class UserDelleteView(generics.DestroyAPIView):
             return Response({"status": 200, "user": "Удален"})
         except User.DoesNotExist:
             return Response({"message": "Пользователь не найден"}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PATCH'])
+def user_setting_update(request):
+    """Обновление пользовательских настроек"""
+    user_id = get_user_id(request)
+    serializer = SettingGetSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.update(Setting.objects.get(user_id=user_id), serializer.validated_data)
+        q = Setting.objects.get(user_id=user_id)
+        print(q.user.email)
+        return Response({"settings": serializer.data})
+    else:
+        response = serializer.errors
+        return Response(response)

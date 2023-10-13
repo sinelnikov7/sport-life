@@ -116,14 +116,13 @@ def test_get_user_profile(api_client, token):
     """Получение профиля юзера"""
     response = {'status': 200, 'user': {'id': 1, 'is_approve': False, 'username': 'admin', 'email': 'admin@admin.ru',
                                         'first_name': '', 'last_name': '', 'is_coach': False, 'date_of_birth': None,
-                                        'height': None, 'weight': None, 'avatar': None}}
-    assert api_client.get('/api/profile/', headers={'Authorization': f'access {token}'}).data == response
+                                        'height': None, 'weight': None, 'avatar': None, 'setting': {'country': None, 'city': None, 'who_can_watch': 0}}}
+    assert api_client.get('/api/profile/', headers={'Authorization': f'access {token}'}).json() == response
 
 
 @pytest.mark.django_db
 def test_update_user_profile(api_client, token):
     """Обновление профиля юзера"""
-
     fields = {
         "first_name": "Владимиров!!!!!!!!",
         "last_name": "Синельникbhg",
@@ -141,6 +140,21 @@ def test_update_user_profile(api_client, token):
                 'date_of_birth': '1988-01-09',
                 'height': '0.4',
                 'weight': '0.4',
-                'avatar': None, 'age': 35}
+                'avatar': None, 'age': 35, 'setting': {'country': None, 'city': None, 'who_can_watch': 0}}
     assert api_client.patch('/api/profile/update/', data=fields, headers={'Authorization': f'access {token}'}).json() == response
+
+@pytest.mark.django_db
+def test_update_user_settings(api_client, token):
+    data = {
+            "country": "Минск",
+            "city": "Непал",
+            "who_can_watch": 1
+            }
+    response = {
+                "settings": {
+                    "country": "Минск",
+                    "city": "Непал",
+                    "who_can_watch": 1
+                }}
+    assert api_client.patch('/api/profile/setting-update/', data=data, headers={'Authorization': f'access {token}'}).json() == response
 
