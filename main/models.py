@@ -3,8 +3,11 @@ import datetime
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+# from friend.models import Friend
+
 
 
 class User(AbstractUser):
@@ -16,7 +19,7 @@ class User(AbstractUser):
     date_of_birth = models.DateField(verbose_name='Дата рождения', null=True, blank=True)
     height = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Рост в см', null=True, blank=True)
     weight = models.DecimalField(max_digits=4, decimal_places=1, verbose_name='Вес в кг', null=True, blank=True)
-    avatar = models.ImageField(upload_to='user_avatar', verbose_name='Аватар пользователя')
+    avatar = models.ImageField(upload_to='user_avatar', verbose_name='Аватар пользователя', null=True, blank=True)
 
     REQUIRED_FIELDS = ['username']
     USERNAME_FIELD = "email"
@@ -71,10 +74,12 @@ class Setting(models.Model):
 
 @receiver(post_save, sender=User)
 def create_setting(sender, instance, **kwargs):
+    """Создание объекта настроек для пользователя"""
     try:
         instance.setting
     except ObjectDoesNotExist:
         Setting.objects.create(who_can_watch=0, user_id=instance.id)
+
 
 
 

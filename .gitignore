@@ -171,3 +171,4 @@ cython_debug/
 /notes/migrations/0004_alter_note_options.py
 /main/migrations/0003_setting.py
 /main/migrations/0004_alter_setting_who_can_watch.py
+/friend/migrations/0001_initial.py

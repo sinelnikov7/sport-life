@@ -5,6 +5,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from notes.views import NoteCreateUpdateGetDestroyViewSet
 from todo.views import TaskCreateUpdateGetDestroyViewSet
 
+from friend.views import get_friends, add_to_friendlist, confirm_to_friendlist
+
 
 router = DefaultRouter()
 # router = SimpleRouter()
@@ -26,4 +28,8 @@ urlpatterns = [
     # path('git_update', update),
     path('main', main),
     path('', include(router.urls)),
+
+    path('get-friends/', get_friends),
+    path('add-to-friendlist/<int:pk>', add_to_friendlist),
+    path('confirm-to-friendlist/<int:pk>', confirm_to_friendlist)
 ]
